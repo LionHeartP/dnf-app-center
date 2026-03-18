@@ -1000,10 +1000,10 @@ class DnfBackend:
             if event_cb is not None and line:
                 event_cb({"event": "log", "message": line})
         rc = proc.wait()
-        if self._looks_like_dependency_conflict(lines):
-            return False, "\n".join(lines) or "System update reported conflicts/broken dependencies."
         if rc == 0:
             return True, "System update completed successfully."
+        if self._looks_like_dependency_conflict(lines):
+            return False, "\n".join(lines) or "System update reported conflicts/broken dependencies."
         return False, "\n".join(lines) or f"nobara-sync cli failed with exit code {rc}."
 
     def _transaction_success_value(self):

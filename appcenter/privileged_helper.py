@@ -208,10 +208,10 @@ def _run_system_update() -> tuple[bool, str]:
         if line:
             emit("log", message=line)
     rc = process.wait()
-    if _looks_like_dependency_conflict(output_lines):
-        return False, "\n".join(output_lines) or "System update reported conflicts/broken dependencies."
     if rc == 0:
         return True, "System update completed successfully."
+    if _looks_like_dependency_conflict(output_lines):
+        return False, "\n".join(output_lines) or "System update reported conflicts/broken dependencies."
     return False, "\n".join(output_lines) or f"nobara-sync cli failed with exit code {rc}."
 
 
