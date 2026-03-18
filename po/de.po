@@ -1,0 +1,233 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: org.dnf.AppCenter 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-14 00:00+0000\n"
+"PO-Revision-Date: 2026-03-14 00:00+0000\n"
+"Last-Translator: OpenAI\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgid "Audio & Video"
+msgstr "Audio & Video"
+
+msgid "Browse and install Fedora applications with libdnf5 and AppStream"
+msgstr "Fedora-Anwendungen mit libdnf5 und AppStream durchsuchen und installieren"
+
+msgid "Categories"
+msgstr "Kategorien"
+
+msgid "Check every"
+msgstr "Prüfen alle"
+
+msgid "Check for Updates"
+msgstr "Nach Aktualisierungen suchen"
+
+msgid "Checks for package updates and shows a tray icon when updates are available"
+msgstr "Prüft auf Paketaktualisierungen und zeigt ein Tray-Symbol, wenn Updates verfügbar sind"
+
+msgid "Clear Selection"
+msgstr "Auswahl aufheben"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Copied to clipboard"
+msgstr "In die Zwischenablage kopiert"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+msgid "DNF App Center"
+msgstr "DNF-Anwendungszentrum"
+
+msgid "DNF App Center Updater"
+msgstr "DNF-Anwendungszentrum-Updater"
+
+msgid "Developer Tools"
+msgstr "Entwicklerwerkzeuge"
+
+msgid "Education"
+msgstr "Bildung"
+
+msgid "Enable update checker"
+msgstr "Aktualisierungsprüfung aktivieren"
+
+msgid "Failed to load metadata."
+msgstr "Metadaten konnten nicht geladen werden."
+
+msgid "Games"
+msgstr "Spiele"
+
+msgid "Graphics & Photography"
+msgstr "Grafik & Fotografie"
+
+msgid "Install"
+msgstr "Installieren"
+
+msgid "Install local RPM files"
+msgstr "Lokale RPM-Dateien installieren"
+
+msgid "Installed"
+msgstr "Installiert"
+
+msgid "Latest news and announcements."
+msgstr "Neueste Nachrichten und Ankündigungen."
+
+msgid "Loading AppStream metadata and DNF repositories…"
+msgstr "AppStream-Metadaten und DNF-Paketquellen werden geladen…"
+
+msgid "Loading…"
+msgstr "Wird geladen…"
+
+msgid "Local RPM Install"
+msgstr "Lokale RPM-Installation"
+
+msgid "Networking"
+msgstr "Netzwerk"
+
+msgid "News"
+msgstr "Neuigkeiten"
+
+msgid "No queued package actions yet."
+msgstr "Noch keine Paketaktionen in der Warteschlange."
+
+msgid "No transaction log available yet."
+msgstr "Noch kein Transaktionsprotokoll verfügbar."
+
+msgid "No updates are available."
+msgstr "Keine Aktualisierungen verfügbar."
+
+msgid "No updates available"
+msgstr "Keine Aktualisierungen verfügbar"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Open App Center"
+msgstr "App Center öffnen"
+
+msgid "Open directly to the Updates section"
+msgstr "Direkt den Bereich Aktualisierungen öffnen"
+
+msgid "Package update(s) are available."
+msgstr "Paketaktualisierungen sind verfügbar."
+
+msgid "Pastebin URL"
+msgstr "Pastebin-URL"
+
+msgid "Pastebin upload failed"
+msgstr "Pastebin-Upload fehlgeschlagen"
+
+msgid "Productivity"
+msgstr "Produktivität"
+
+msgid "Queue"
+msgstr "Warteschlange"
+
+msgid "Queued actions"
+msgstr "Ausstehende Aktionen"
+
+msgid "Remember auth"
+msgstr "Anmeldung merken"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "Repositories"
+msgstr "Paketquellen"
+
+msgid "Science"
+msgstr "Wissenschaft"
+
+msgid "Screenshots"
+msgstr "Bildschirmfotos"
+
+msgid "Screenshots could not be loaded locally."
+msgstr "Bildschirmfotos konnten lokal nicht geladen werden."
+
+msgid "Search applications…"
+msgstr "Anwendungen suchen…"
+
+msgid "Search filter…"
+msgstr "Suchfilter…"
+
+msgid "Send to pastebin"
+msgstr "An Pastebin senden"
+
+msgid "Startup failed"
+msgstr "Start fehlgeschlagen"
+
+msgid "System"
+msgstr "System"
+
+msgid "System Update"
+msgstr "Systemaktualisierung"
+
+msgid "System update is already in the queue."
+msgstr "Die Systemaktualisierung befindet sich bereits in der Warteschlange."
+
+msgid "These settings affect the tray updater service."
+msgstr "Diese Einstellungen beeinflussen den Tray-Aktualisierungsdienst."
+
+msgid "Transaction log"
+msgstr "Transaktionsprotokoll"
+
+msgid "Update"
+msgstr "Aktualisieren"
+
+msgid "Update Selected"
+msgstr "Ausgewählte aktualisieren"
+
+msgid "Update System"
+msgstr "System aktualisieren"
+
+msgid "Update checker"
+msgstr "Aktualisierungsprüfung"
+
+msgid "Updates"
+msgstr "Aktualisierungen"
+
+msgid "Updates are available"
+msgstr "Aktualisierungen sind verfügbar"
+
+msgid "Utilities"
+msgstr "Dienstprogramme"
+
+msgid "View Queue"
+msgstr "Warteschlange anzeigen"
+
+msgid "View transaction log"
+msgstr "Transaktionsprotokoll anzeigen"
+
+msgid "days"
+msgstr "Tage"
+
+msgid "gtk-launch not found on this system."
+msgstr "gtk-launch wurde auf diesem System nicht gefunden."
+
+msgid "hours"
+msgstr "Stunden"
+
+msgid "weeks"
+msgstr "Wochen"
+
+msgid "← Back"
+msgstr "← Zurück"
+
+msgid "Enable notifications"
+msgstr ""
+
+msgid "Check updates once and exit"
+msgstr ""
+
+msgid "Force metadata refresh when used with --check"
+msgstr ""
+
+msgid "Print result as JSON when used with --check"
+msgstr ""

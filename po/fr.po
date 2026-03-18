@@ -1,0 +1,233 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: org.dnf.AppCenter 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-14 00:00+0000\n"
+"PO-Revision-Date: 2026-03-14 00:00+0000\n"
+"Last-Translator: OpenAI\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+msgid "Audio & Video"
+msgstr "Audio et vidéo"
+
+msgid "Browse and install Fedora applications with libdnf5 and AppStream"
+msgstr "Parcourir et installer des applications Fedora avec libdnf5 et AppStream"
+
+msgid "Categories"
+msgstr "Catégories"
+
+msgid "Check every"
+msgstr "Vérifier toutes les"
+
+msgid "Check for Updates"
+msgstr "Rechercher des mises à jour"
+
+msgid "Checks for package updates and shows a tray icon when updates are available"
+msgstr "Vérifie les mises à jour de paquets et affiche une icône dans la zone de notification lorsqu’elles sont disponibles"
+
+msgid "Clear Selection"
+msgstr "Effacer la sélection"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Copied to clipboard"
+msgstr "Copié dans le presse-papiers"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "DNF App Center"
+msgstr "Centre d’applications DNF"
+
+msgid "DNF App Center Updater"
+msgstr "Mise à jour du Centre d’applications DNF"
+
+msgid "Developer Tools"
+msgstr "Outils de développement"
+
+msgid "Education"
+msgstr "Éducation"
+
+msgid "Enable update checker"
+msgstr "Activer le vérificateur de mises à jour"
+
+msgid "Failed to load metadata."
+msgstr "Échec du chargement des métadonnées."
+
+msgid "Games"
+msgstr "Jeux"
+
+msgid "Graphics & Photography"
+msgstr "Graphisme et photographie"
+
+msgid "Install"
+msgstr "Installer"
+
+msgid "Install local RPM files"
+msgstr "Installer des fichiers RPM locaux"
+
+msgid "Installed"
+msgstr "Installé"
+
+msgid "Latest news and announcements."
+msgstr "Dernières actualités et annonces."
+
+msgid "Loading AppStream metadata and DNF repositories…"
+msgstr "Chargement des métadonnées AppStream et des dépôts DNF…"
+
+msgid "Loading…"
+msgstr "Chargement…"
+
+msgid "Local RPM Install"
+msgstr "Installation RPM locale"
+
+msgid "Networking"
+msgstr "Réseau"
+
+msgid "News"
+msgstr "Actualités"
+
+msgid "No queued package actions yet."
+msgstr "Aucune action de paquet en file d’attente pour le moment."
+
+msgid "No transaction log available yet."
+msgstr "Aucun journal de transactions disponible pour le moment."
+
+msgid "No updates are available."
+msgstr "Aucune mise à jour disponible."
+
+msgid "No updates available"
+msgstr "Aucune mise à jour disponible"
+
+msgid "Open"
+msgstr "Ouvrir"
+
+msgid "Open App Center"
+msgstr "Ouvrir le Centre d’applications"
+
+msgid "Open directly to the Updates section"
+msgstr "Ouvrir directement la section Mises à jour"
+
+msgid "Package update(s) are available."
+msgstr "Des mises à jour de paquets sont disponibles."
+
+msgid "Pastebin URL"
+msgstr "URL Pastebin"
+
+msgid "Pastebin upload failed"
+msgstr "Échec de l’envoi vers Pastebin"
+
+msgid "Productivity"
+msgstr "Productivité"
+
+msgid "Queue"
+msgstr "File d’attente"
+
+msgid "Queued actions"
+msgstr "Actions en file d’attente"
+
+msgid "Remember auth"
+msgstr "Mémoriser l’authentification"
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Repositories"
+msgstr "Dépôts"
+
+msgid "Science"
+msgstr "Science"
+
+msgid "Screenshots"
+msgstr "Captures d’écran"
+
+msgid "Screenshots could not be loaded locally."
+msgstr "Les captures d’écran n’ont pas pu être chargées localement."
+
+msgid "Search applications…"
+msgstr "Rechercher des applications…"
+
+msgid "Search filter…"
+msgstr "Filtre de recherche…"
+
+msgid "Send to pastebin"
+msgstr "Envoyer vers Pastebin"
+
+msgid "Startup failed"
+msgstr "Échec du démarrage"
+
+msgid "System"
+msgstr "Système"
+
+msgid "System Update"
+msgstr "Mise à jour du système"
+
+msgid "System update is already in the queue."
+msgstr "La mise à jour du système est déjà dans la file d’attente."
+
+msgid "These settings affect the tray updater service."
+msgstr "Ces paramètres affectent le service de mise à jour dans la zone de notification."
+
+msgid "Transaction log"
+msgstr "Journal des transactions"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Update Selected"
+msgstr "Mettre à jour la sélection"
+
+msgid "Update System"
+msgstr "Mettre à jour le système"
+
+msgid "Update checker"
+msgstr "Vérificateur de mises à jour"
+
+msgid "Updates"
+msgstr "Mises à jour"
+
+msgid "Updates are available"
+msgstr "Des mises à jour sont disponibles"
+
+msgid "Utilities"
+msgstr "Utilitaires"
+
+msgid "View Queue"
+msgstr "Voir la file d’attente"
+
+msgid "View transaction log"
+msgstr "Afficher le journal des transactions"
+
+msgid "days"
+msgstr "jours"
+
+msgid "gtk-launch not found on this system."
+msgstr "gtk-launch est introuvable sur ce système."
+
+msgid "hours"
+msgstr "heures"
+
+msgid "weeks"
+msgstr "semaines"
+
+msgid "← Back"
+msgstr "← Retour"
+
+msgid "Enable notifications"
+msgstr ""
+
+msgid "Check updates once and exit"
+msgstr ""
+
+msgid "Force metadata refresh when used with --check"
+msgstr ""
+
+msgid "Print result as JSON when used with --check"
+msgstr ""

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnf-app-center"
+version = "0.1.0"
+description = "A basic Fedora app center using libdnf5 and AppStream"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "OpenAI"}]
+
+[project.scripts]
+dnf-app-center = "appcenter.main:main"
+dnf-app-center-updater = "appcenter.updater_service:cli_main"
+
+[tool.setuptools]
+packages = ["appcenter"]
+
+[tool.setuptools.package-data]
+appcenter = ["assets/*.svg"]
