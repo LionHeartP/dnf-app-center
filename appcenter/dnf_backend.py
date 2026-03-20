@@ -843,7 +843,8 @@ class DnfBackend:
     def _start_privileged_helper(self, event_cb: Callable[[dict], None] | None = None) -> tuple[bool, str]:
         helper = Path(__file__).with_name("privileged_helper.py").resolve()
         python_bin = sys.executable or "/usr/bin/python3"
-        cmd = ["pkexec", python_bin, "-u", str(helper), "--server"]
+        user_home = os.path.expanduser("~")
+        cmd = ["pkexec", python_bin, "-u", str(helper), "--server", "--user-home", user_home]
         env = dict(os.environ)
         env.setdefault("PYTHONUNBUFFERED", "1")
         try:
