@@ -1,10 +1,25 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
+import os
+import pwd
 import subprocess
 import sys
 
+def _force_user_env():
+    """Extracts --user-home from sys.argv before formal parsing to fix HOME immediately."""
+    for i, arg in enumerate(sys.argv):
+        if arg == "--user-home" and i + 1 < len(sys.argv):
+            user_home = sys.argv[i+1]
+            os.environ["HOME"] = user_home
+            os.environ["XDG_DATA_HOME"] = os.path.join(user_home, ".local", "share")
+            os.environ["XDG_CONFIG_HOME"] = os.path.join(user_home, ".config")
+            os.environ["XDG_CACHE_HOME"] = os.path.join(user_home, ".cache")
+            break
+
+_force_user_env()
 
 def emit(event: str, **payload) -> None:
     payload = {"event": event, **payload}
@@ -184,7 +199,13 @@ def _run_rpm_file_install(paths: list[str]) -> tuple[bool, str]:
 
 def _run_system_update() -> tuple[bool, str]:
     emit("log", message="Running system update via nobara-sync cli...")
-    cmd = ["nobara-sync", "cli"]
+    target_home = os.environ.get("HOME", "/root")
+    cmd = [
+        "/usr/bin/env",
+        f"HOME={target_home}",
+        f"XDG_DATA_HOME={target_home}/.local/share",
+        "nobara-sync", "cli"
+    ]
     try:
         process = subprocess.Popen(
             cmd,
@@ -194,6 +215,7 @@ def _run_system_update() -> tuple[bool, str]:
             encoding="utf-8",
             errors="replace",
             bufsize=1,
+            env=os.environ.copy()
         )
     except FileNotFoundError:
         return False, "nobara-sync is not installed."
@@ -361,6 +383,27 @@ def server_main() -> int:
 
 
 def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--server", action="store_true")
+    parser.add_argument("--user-home", type=str)
+    args, remaining = parser.parse_known_args(argv[1:])
+    if args.server:
+        return server_main()
+    if not remaining:
+        print(json.dumps({"ok": False, "message": "Usage: privileged_helper.py <action> [package]"}), flush=True)
+        return 2
+    action = remaining[0]
+    pkg_name = remaining[1] if len(remaining) >= 2 else ""
+
+    backend, error = _build_backend()
+    if error is not None:
+        print(json.dumps(error), flush=True)
+        return 1
+    libdnf5, base = backend
+    ok, message = _run_transaction(libdnf5, base, action, pkg_name)
+    emit("result", ok=ok, message=message)
+    return 0 if ok else 1
+
     if len(argv) >= 2 and argv[1] == "--server":
         return server_main()
 
