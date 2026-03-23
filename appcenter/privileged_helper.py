@@ -34,6 +34,8 @@ def _build_backend():
 
     base = libdnf5.base.Base()
     base.load_config()
+    config = base.get_config()
+    config.metadata_expire = 0
     base.setup()
 
     repo_sack = base.get_repo_sack()
