@@ -53,7 +53,7 @@ def save_updater_settings(settings: dict) -> None:
     _UPDATER_CONFIG_PATH.write_text(json.dumps(payload, indent=2))
 
 from .i18n import _
-from .updater_config import load_updater_settings, save_updater_settings, VALID_UNITS
+from .updater_config import load_updater_settings, save_updater_settings, VALID_UNITS, save_view_mode, get_view_mode
 from .models import AppEntry, should_hide_from_standard_catalog
 
 
@@ -1115,6 +1115,7 @@ class MainWindow(Adw.ApplicationWindow):
         self._page_items_cache: dict[tuple, list[AppEntry]] = {}
         self._data_revision = 0
         self.view_mode = "grid"  # Can be "grid" or "list"
+        self._updating_view_buttons = False  # Flag to prevent toggle recursion
 
         provider = Gtk.CssProvider()
         provider.load_from_bytes(GLib.Bytes.new(CSS))
@@ -2015,16 +2016,32 @@ class MainWindow(Adw.ApplicationWindow):
         self.current_category_filter_text = entry.get_text().strip()
         self._refresh_main_page(preserve_scroll=False)
 
+    def _current_page_key(self) -> str:
+        """Get a unique key for the current page to store view mode preference."""
+        if self.current_search_text:
+            return "search"
+        return f"{self.current_group}:{self.current_page}"
+
     def _on_grid_view_toggled(self, button: Gtk.ToggleButton) -> None:
+        if self._updating_view_buttons:
+            return
         if button.get_active() and self.view_mode != "grid":
+            self._updating_view_buttons = True
             self.view_mode = "grid"
             self.list_view_button.set_active(False)
+            save_view_mode(self._current_page_key(), "grid")
+            self._updating_view_buttons = False
             self._refresh_main_page(preserve_scroll=False)
 
     def _on_list_view_toggled(self, button: Gtk.ToggleButton) -> None:
+        if self._updating_view_buttons:
+            return
         if button.get_active() and self.view_mode != "list":
+            self._updating_view_buttons = True
             self.view_mode = "list"
             self.grid_view_button.set_active(False)
+            save_view_mode(self._current_page_key(), "list")
+            self._updating_view_buttons = False
             self._refresh_main_page(preserve_scroll=False)
 
     def _on_repo_filter_changed(self, combo: Gtk.ComboBoxText) -> None:
@@ -2155,6 +2172,20 @@ class MainWindow(Adw.ApplicationWindow):
         show_local_filter = (not in_search_mode and ((self.current_group == "categories") or (self.current_group == "system" and self.current_page in {"installed", "updates"})))
         self.category_filter_entry.set_visible(show_local_filter)
         self.view_toggle_box.set_visible(show_local_filter)
+
+        # Restore saved view mode for this page
+        if show_local_filter:
+            saved_mode = get_view_mode(self._current_page_key(), "grid")
+            if saved_mode != self.view_mode:
+                self._updating_view_buttons = True
+                self.view_mode = saved_mode
+                if saved_mode == "grid":
+                    self.grid_view_button.set_active(True)
+                    self.list_view_button.set_active(False)
+                else:
+                    self.list_view_button.set_active(True)
+                    self.grid_view_button.set_active(False)
+                self._updating_view_buttons = False
 
         items = self._filtered_apps_for_current_page()
         self.current_items = items

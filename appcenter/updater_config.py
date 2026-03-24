@@ -63,3 +63,35 @@ def updater_interval_seconds(settings: dict | None = None) -> int:
         'weeks': 604800,
     }
     return value * multipliers.get(unit, 3600)
+
+
+def _view_mode_config_path() -> Path:
+    return Path.home() / '.config' / 'dnf-app-center' / 'view_modes.json'
+
+
+def load_view_modes() -> dict:
+    """Load view mode preferences per page."""
+    path = _view_mode_config_path()
+    try:
+        if path.exists():
+            data = json.loads(path.read_text(encoding='utf-8'))
+            if isinstance(data, dict):
+                return data
+    except Exception:
+        pass
+    return {}
+
+
+def save_view_mode(page_key: str, view_mode: str) -> None:
+    """Save view mode preference for a specific page."""
+    view_modes = load_view_modes()
+    view_modes[page_key] = view_mode
+    path = _view_mode_config_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(view_modes, indent=2, sort_keys=True), encoding='utf-8')
+
+
+def get_view_mode(page_key: str, default: str = "grid") -> str:
+    """Get view mode preference for a specific page."""
+    view_modes = load_view_modes()
+    return view_modes.get(page_key, default)
