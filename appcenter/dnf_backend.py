@@ -160,6 +160,17 @@ class DnfBackend:
         installed_q = self.libdnf5.rpm.PackageQuery(self.base)
         installed_q.filter_name([pkg_name])
         installed_q.filter_installed()
+        # For packages with multiple versions installed (e.g., kernels),
+        # we want the newest one to compare against available updates
+        try:
+            installed_q.filter_latest_evr()
+        except TypeError:
+            try:
+                installed_q.filter_latest_evr(True)
+            except Exception:
+                pass
+        except Exception:
+            pass
         return next(iter(installed_q), None)
 
     def _available_packages_for_name(self, pkg_name: str, repo_id: str = "__all__", preferred_arch: str | None = None) -> list:
