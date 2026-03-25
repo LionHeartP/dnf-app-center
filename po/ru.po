@@ -94,6 +94,9 @@ msgstr "Сеть"
 msgid "News"
 msgstr "Новости"
 
+msgid "Important Notices"
+msgstr "Важные уведомления"
+
 msgid "No queued package actions yet."
 msgstr "В очереди ещё нет действий с пакетами."
 

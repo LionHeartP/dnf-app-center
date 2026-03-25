@@ -94,6 +94,9 @@ msgstr "ネットワーク"
 msgid "News"
 msgstr "ニュース"
 
+msgid "Important Notices"
+msgstr "重要なお知らせ"
+
 msgid "No queued package actions yet."
 msgstr "キューされたパッケージ操作はまだありません。"
 

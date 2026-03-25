@@ -94,6 +94,9 @@ msgstr "網路"
 msgid "News"
 msgstr "新聞"
 
+msgid "Important Notices"
+msgstr "重要通知"
+
 msgid "No queued package actions yet."
 msgstr "目前沒有排隊中的套件操作。"
 

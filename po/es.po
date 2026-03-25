@@ -94,6 +94,9 @@ msgstr "Redes"
 msgid "News"
 msgstr "Noticias"
 
+msgid "Important Notices"
+msgstr "Avisos Importantes"
+
 msgid "No queued package actions yet."
 msgstr "Todavía no hay acciones de paquetes en cola."
 

@@ -94,6 +94,9 @@ msgstr "Netzwerk"
 msgid "News"
 msgstr "Neuigkeiten"
 
+msgid "Important Notices"
+msgstr "Wichtige Hinweise"
+
 msgid "No queued package actions yet."
 msgstr "Noch keine Paketaktionen in der Warteschlange."
 

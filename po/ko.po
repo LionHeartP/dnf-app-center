@@ -94,6 +94,9 @@ msgstr "네트워킹"
 msgid "News"
 msgstr "뉴스"
 
+msgid "Important Notices"
+msgstr "중요 공지"
+
 msgid "No queued package actions yet."
 msgstr "아직 대기 중인 패키지 작업이 없습니다."
 

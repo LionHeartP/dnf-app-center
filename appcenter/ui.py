@@ -187,7 +187,6 @@ class QueueItem:
 
 CATEGORY_GROUPS = {
     "system": {
-        "news": _("News"),
         "installed": _("Installed"),
         "updates": _("Updates"),
         "queue": _("Queue"),
@@ -209,7 +208,6 @@ CATEGORY_GROUPS = {
 
 CATEGORY_ICONS = {
     "system": {
-        "news": "starred-symbolic",
         "installed": "emblem-default-symbolic",
         "updates": "software-update-available-symbolic",
         "queue": "view-list-symbolic",
@@ -516,6 +514,10 @@ windowhandle > box.top-bar {
 .news-body {
   font-size: 1.02em;
   line-height: 1.45;
+}
+.news-panel {
+  background: alpha(@window_bg_color, 0.5);
+  border-left: 1px solid alpha(currentColor, 0.1);
 }
 """
 
@@ -1125,8 +1127,10 @@ class MainWindow(Adw.ApplicationWindow):
         self.backend: DnfBackend | None = None
         self.apps: list[AppEntry] = []
         self.current_items: list[AppEntry] = []
-        self.current_page = "updates" if launch_updates else "news"
+        self.current_page = "updates"
         self.current_group = "system"
+        self.news_panel_visible = True
+        self.news_text = "Loading news…"
         self.current_subcategory: str | None = None
         self.current_search_text = ""
         self.current_category_filter_text = ""
@@ -1271,6 +1275,14 @@ class MainWindow(Adw.ApplicationWindow):
         self.update_all_button.connect("clicked", lambda *_: self._queue_system_update())
         self.updates_action_bar.append(self.update_all_button)
 
+        # News panel toggle button
+        self.news_toggle_button = Gtk.ToggleButton()
+        self.news_toggle_button.set_icon_name("starred-symbolic")
+        self.news_toggle_button.set_tooltip_text(_("Toggle News Panel"))
+        self.news_toggle_button.set_active(True)
+        self.news_toggle_button.connect("toggled", self._on_news_toggle)
+        self.title_row.append(self.news_toggle_button)
+
         self.subcategory_strip = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.subcategory_strip.add_css_class("subcat-strip")
         self.subcategory_strip.set_hexpand(True)
@@ -1330,11 +1342,11 @@ class MainWindow(Adw.ApplicationWindow):
         bottom_bar.append(queue_button)
 
         self._build_list_page()
-        self._build_news_page()
         self._build_queue_page()
         self._build_repo_page()
         self._build_detail_page()
 
+        self._refresh_news_page()
         self._show_loading_page(_("Loading AppStream metadata and DNF repositories…"))
         self._load_async(force=True)
 
@@ -1559,6 +1571,17 @@ class MainWindow(Adw.ApplicationWindow):
         outer.set_vexpand(True)
         self.stack.add_titled(outer, "list", "List")
 
+        # Horizontal box to hold list and news panel side-by-side
+        horiz_container = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        horiz_container.set_vexpand(True)
+        outer.append(horiz_container)
+
+        # Left side: list content
+        list_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        list_container.set_vexpand(True)
+        list_container.set_hexpand(True)
+        horiz_container.append(list_container)
+
         self.listbox = Gtk.ListBox()
         self.listbox.add_css_class("app-list")
         self.listbox.set_selection_mode(Gtk.SelectionMode.NONE)
@@ -1569,35 +1592,53 @@ class MainWindow(Adw.ApplicationWindow):
         self.list_scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.list_scroller.set_child(self.listbox)
         self.list_scroller.set_vexpand(True)
-        outer.append(self.list_scroller)
+        list_container.append(self.list_scroller)
 
         self.empty_status = Adw.StatusPage()
         self.empty_status.set_title("No applications found")
         self.empty_status.set_description("Try a different category or search term.")
-        outer.append(self.empty_status)
+        list_container.append(self.empty_status)
         self.empty_status.set_visible(False)
 
-    def _build_news_page(self) -> None:
-        self.news_scroll = Gtk.ScrolledWindow()
-        self.news_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.stack.add_titled(self.news_scroll, "news", _("News"))
+        # Right side: news panel with revealer
+        self.news_panel_revealer = Gtk.Revealer()
+        self.news_panel_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_LEFT)
+        self.news_panel_revealer.set_transition_duration(250)
+        self.news_panel_revealer.set_reveal_child(True)
+        horiz_container.append(self.news_panel_revealer)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        box.set_margin_top(8)
-        box.set_margin_bottom(20)
-        box.set_margin_start(4)
-        box.set_margin_end(4)
-        self.news_scroll.set_child(box)
+        news_panel_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        news_panel_box.add_css_class("news-panel")
+        news_panel_box.set_size_request(350, -1)
+        self.news_panel_revealer.set_child(news_panel_box)
 
-        self.news_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
-        self.news_card.add_css_class("news-card")
-        box.append(self.news_card)
+        self.news_panel_scroll = Gtk.ScrolledWindow()
+        self.news_panel_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.news_panel_scroll.set_vexpand(True)
+        news_panel_box.append(self.news_panel_scroll)
 
-        self.news_content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        self.news_card.append(self.news_content_box)
+        news_inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        news_inner_box.set_margin_top(8)
+        news_inner_box.set_margin_bottom(20)
+        news_inner_box.set_margin_start(12)
+        news_inner_box.set_margin_end(12)
+        self.news_panel_scroll.set_child(news_inner_box)
 
-        self.news_text = "Loading news…"
-        self._refresh_news_page()
+        # News panel title
+        news_title_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        news_title_box.set_margin_top(4)
+        news_title_box.set_margin_bottom(8)
+        news_title_label = Gtk.Label(label=_("Important Notices"), xalign=0)
+        news_title_label.add_css_class("sidebar-section")
+        news_title_box.append(news_title_label)
+        news_inner_box.append(news_title_box)
+
+        self.news_panel_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+        self.news_panel_card.add_css_class("news-card")
+        news_inner_box.append(self.news_panel_card)
+
+        self.news_panel_content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        self.news_panel_card.append(self.news_panel_content_box)
 
     def _build_queue_page(self) -> None:
         scroller = Gtk.ScrolledWindow()
@@ -1841,12 +1882,12 @@ class MainWindow(Adw.ApplicationWindow):
             return f"Failed to load news from {url}.\n\n{exc}"
 
     def _refresh_news_page(self) -> None:
-        if not hasattr(self, "news_content_box"):
+        if not hasattr(self, "news_panel_content_box"):
             return
-        child = self.news_content_box.get_first_child()
+        child = self.news_panel_content_box.get_first_child()
         while child is not None:
             next_child = child.get_next_sibling()
-            self.news_content_box.remove(child)
+            self.news_panel_content_box.remove(child)
             child = next_child
 
         raw_text = (getattr(self, "news_text", "Loading news…") or "No news available.").strip()
@@ -1863,7 +1904,7 @@ class MainWindow(Adw.ApplicationWindow):
             label.set_use_markup(True)
             label.set_markup(section)
             label.connect("activate-link", lambda _label, uri: (Gtk.show_uri(None, uri, Gdk.CURRENT_TIME), True)[1])
-            self.news_content_box.append(label)
+            self.news_panel_content_box.append(label)
 
     def _load_failed(self, exc: Exception, tb: str) -> bool:
         self.status_label.set_text(_("Failed to load metadata."))
@@ -2084,6 +2125,10 @@ class MainWindow(Adw.ApplicationWindow):
             self._updating_view_buttons = False
             self._refresh_main_page(preserve_scroll=False)
 
+    def _on_news_toggle(self, button: Gtk.ToggleButton) -> None:
+        self.news_panel_visible = button.get_active()
+        self.news_panel_revealer.set_reveal_child(self.news_panel_visible)
+
     def _on_repo_filter_changed(self, combo: Gtk.ComboBoxText) -> None:
         self.current_repo_filter = combo.get_active_id() or "__all__"
         self._refresh_main_page()
@@ -2117,8 +2162,6 @@ class MainWindow(Adw.ApplicationWindow):
         scroller = None
         if visible == "list" and hasattr(self, "list_scroller"):
             scroller = self.list_scroller
-        elif visible == "news" and hasattr(self, "news_scroll"):
-            scroller = self.news_scroll
         elif visible == "queue":
             scroller = self.stack.get_child_by_name("queue")
         elif visible == "repos" and hasattr(self, "repo_scroll"):
@@ -2139,8 +2182,6 @@ class MainWindow(Adw.ApplicationWindow):
         scroller = None
         if visible == "list" and hasattr(self, "list_scroller"):
             scroller = self.list_scroller
-        elif visible == "news" and hasattr(self, "news_scroll"):
-            scroller = self.news_scroll
         elif visible == "queue":
             scroller = self.stack.get_child_by_name("queue")
         elif visible == "repos" and hasattr(self, "repo_scroll"):
@@ -2159,8 +2200,6 @@ class MainWindow(Adw.ApplicationWindow):
         scroller = None
         if visible == "list" and hasattr(self, "list_scroller"):
             scroller = self.list_scroller
-        elif visible == "news" and hasattr(self, "news_scroll"):
-            scroller = self.news_scroll
         elif visible == "queue":
             scroller = self.stack.get_child_by_name("queue")
         elif visible == "repos" and hasattr(self, "repo_scroll"):
@@ -2179,16 +2218,6 @@ class MainWindow(Adw.ApplicationWindow):
         else:
             visible_before, scroll_before = None, 0.0
         in_search_mode = bool(self.current_search_text)
-        if not in_search_mode and self.current_group == "system" and self.current_page == "news":
-            self.title_label.set_text(CATEGORY_GROUPS["system"]["news"])
-            self.status_label.set_text(_("Latest news and announcements."))
-            self._refresh_news_page()
-            self.stack.set_visible_child_name("news")
-            if preserve_scroll:
-                GLib.idle_add(self._restore_scroll_position, visible_before, scroll_before)
-            else:
-                GLib.idle_add(self._scroll_visible_page_to_top)
-            return
         if not in_search_mode and self.current_group == "system" and self.current_page == "repositories":
             self.title_label.set_text(CATEGORY_GROUPS["system"]["repositories"])
             self.status_label.set_text(f"Showing {len(getattr(self, 'repos', []))} repositories.")
@@ -2212,6 +2241,11 @@ class MainWindow(Adw.ApplicationWindow):
         show_local_filter = (not in_search_mode and ((self.current_group == "categories") or (self.current_group == "system" and self.current_page in {"installed", "updates"})))
         self.category_filter_entry.set_visible(show_local_filter)
         self.view_toggle_box.set_visible(show_local_filter)
+
+        # Show news toggle only on updates page
+        show_news_toggle = (not in_search_mode and self.current_group == "system" and self.current_page == "updates")
+        self.news_toggle_button.set_visible(show_news_toggle)
+        self.news_panel_revealer.set_reveal_child(show_news_toggle and self.news_panel_visible)
 
         # Restore saved view mode for this page
         if show_local_filter:
