@@ -207,6 +207,28 @@ CATEGORY_GROUPS = {
     },
 }
 
+CATEGORY_ICONS = {
+    "system": {
+        "news": "starred-symbolic",
+        "installed": "emblem-default-symbolic",
+        "updates": "software-update-available-symbolic",
+        "queue": "view-list-symbolic",
+        "repositories": "network-server-symbolic",
+    },
+    "categories": {
+        "office": "x-office-document-symbolic",
+        "graphics": "applications-graphics-symbolic",
+        "audiovideo": "applications-multimedia-symbolic",
+        "education": "accessories-dictionary-symbolic",
+        "network": "network-workgroup-symbolic",
+        "game": "applications-games-symbolic",
+        "development": "applications-engineering-symbolic",
+        "science": "applications-science-symbolic",
+        "system": "applications-system-symbolic",
+        "utility": "applications-utilities-symbolic",
+    },
+}
+
 SUBCATEGORY_GROUPS = {
     "audiovideo": {
         "audiovideoediting": "Audio & Video Editing",
@@ -833,7 +855,7 @@ class IconWidget(Gtk.Box):
 
 
 class NavSidebarButton(Gtk.Button):
-    def __init__(self, title: str, callback):
+    def __init__(self, title: str, callback, icon_name: str | None = None):
         super().__init__()
         self.set_halign(Gtk.Align.START)
         self.set_has_frame(False)
@@ -843,6 +865,12 @@ class NavSidebarButton(Gtk.Button):
         inner = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         inner.set_halign(Gtk.Align.START)
         self.set_child(inner)
+
+        if icon_name:
+            icon_widget = Gtk.Image.new_from_gicon(Gio.ThemedIcon.new(icon_name))
+            icon_widget.set_pixel_size(16)
+            icon_widget.add_css_class("nav-icon")
+            inner.append(icon_widget)
 
         self.label_widget = Gtk.Label(label=title, xalign=0)
         self.label_widget.add_css_class("nav-label")
@@ -1494,29 +1522,27 @@ class MainWindow(Adw.ApplicationWindow):
         self.updater_settings = load_updater_settings()
 
     def _build_sidebar(self) -> None:
-        self.sidebar_box.append(self._section_label(_("System"), "applications-system-symbolic"))
+        self.sidebar_box.append(self._section_label(_("System")))
         for key, title in CATEGORY_GROUPS["system"].items():
-            self.sidebar_box.append(self._nav_button(key, title, "system"))
+            icon = CATEGORY_ICONS["system"].get(key)
+            self.sidebar_box.append(self._nav_button(key, title, "system", icon))
 
         self.sidebar_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
-        self.sidebar_box.append(self._section_label(_("Categories"), "starred-symbolic"))
+        self.sidebar_box.append(self._section_label(_("Categories")))
         for key, title in CATEGORY_GROUPS["categories"].items():
-            self.sidebar_box.append(self._nav_button(key, title, "categories"))
+            icon = CATEGORY_ICONS["categories"].get(key)
+            self.sidebar_box.append(self._nav_button(key, title, "categories", icon))
 
-    def _section_label(self, text: str, icon_name: str) -> Gtk.Widget:
+    def _section_label(self, text: str) -> Gtk.Widget:
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=7)
         box.add_css_class("sidebar-section-box")
-        icon_widget = Gtk.Image.new_from_gicon(Gio.ThemedIcon.new(icon_name))
-        icon_widget.set_pixel_size(28)
-        icon_widget.set_valign(Gtk.Align.CENTER)
-        box.append(icon_widget)
         label = Gtk.Label(label=text, xalign=0)
         label.add_css_class("sidebar-section")
         box.append(label)
         return box
 
-    def _nav_button(self, key: str, title: str, group: str) -> Gtk.Widget:
-        button = NavSidebarButton(title, lambda: self._switch_page(group, key))
+    def _nav_button(self, key: str, title: str, group: str, icon_name: str | None = None) -> Gtk.Widget:
+        button = NavSidebarButton(title, lambda: self._switch_page(group, key), icon_name)
         self.nav_buttons[f"{group}:{key}"] = button
         return button
 
