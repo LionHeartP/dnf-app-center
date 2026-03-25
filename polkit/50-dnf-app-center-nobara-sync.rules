@@ -1,0 +1,21 @@
+/* Allow dnf-app-center to run nobara-sync without additional authentication
+ * when the privileged helper is already authenticated
+ */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.policykit.exec" &&
+        action.lookup("program") == "/usr/bin/nobara-sync" &&
+        subject.user == "root") {
+        return polkit.Result.YES;
+    }
+});
+
+/* Allow dnf-app-center to run nobara-updater without additional authentication
+ * when the privileged helper is already authenticated
+ */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.policykit.exec" &&
+        action.lookup("program") == "/usr/bin/nobara-updater" &&
+        subject.user == "root") {
+        return polkit.Result.YES;
+    }
+});

@@ -184,7 +184,7 @@ msgstr ""
 msgid "Update Selected"
 msgstr ""
 
-msgid "Update System"
+msgid "Select All and Update"
 msgstr ""
 
 msgid "Update checker"

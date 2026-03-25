@@ -184,8 +184,8 @@ msgstr "更新"
 msgid "Update Selected"
 msgstr "更新所选项"
 
-msgid "Update System"
-msgstr "更新系统"
+msgid "Select All and Update"
+msgstr "全选并更新"
 
 msgid "Update checker"
 msgstr "更新检查器"

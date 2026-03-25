@@ -184,8 +184,8 @@ msgstr "更新"
 msgid "Update Selected"
 msgstr "選択したものを更新"
 
-msgid "Update System"
-msgstr "システムを更新"
+msgid "Select All and Update"
+msgstr "すべて選択して更新"
 
 msgid "Update checker"
 msgstr "更新チェッカー"

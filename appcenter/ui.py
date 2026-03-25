@@ -1228,7 +1228,13 @@ class MainWindow(Adw.ApplicationWindow):
         self.update_selected_button.connect("clicked", lambda *_: self._queue_selected_updates())
         self.updates_action_bar.append(self.update_selected_button)
 
-        self.update_all_button = Gtk.Button(label=_("Update System"))
+        self.update_all_button = Gtk.Button()
+        update_all_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        update_all_icon = Gtk.Image.new_from_icon_name("software-update-available-symbolic")
+        update_all_label = Gtk.Label(label=_("Select All and Update"))
+        update_all_box.append(update_all_icon)
+        update_all_box.append(update_all_label)
+        self.update_all_button.set_child(update_all_box)
         self.update_all_button.connect("clicked", lambda *_: self._queue_system_update())
         self.updates_action_bar.append(self.update_all_button)
 
@@ -1297,7 +1303,7 @@ class MainWindow(Adw.ApplicationWindow):
         self._build_detail_page()
 
         self._show_loading_page(_("Loading AppStream metadata and DNF repositories…"))
-        self._load_async()
+        self._load_async(force=True)
 
     def _setup_rpm_drop_target(self) -> None:
         try:
@@ -2660,6 +2666,14 @@ class MainWindow(Adw.ApplicationWindow):
         return False
 
     def _queue_system_update(self) -> None:
+        # First, select all update items for visual feedback
+        items = [app for app in self.current_items if app.primary_pkg]
+        for app in items:
+            if app.primary_pkg:
+                self.update_selection.add(app.primary_pkg)
+        self._refresh_updates_action_bar(self.current_items)
+        self._refresh_main_page()
+
         if self._should_use_nobara_sync():
             if any(item.action == "system-update" and item.status in {"queued", "running"} for item in self.queue_items):
                 self._show_toast(_("System update is already in the queue."))
@@ -2683,7 +2697,6 @@ class MainWindow(Adw.ApplicationWindow):
                 self._start_queue_worker()
             return
 
-        items = [app for app in self.current_items if app.primary_pkg]
         if not items:
             self._show_toast(_("No updates are available."))
             return
@@ -2867,6 +2880,11 @@ class MainWindow(Adw.ApplicationWindow):
         self._refresh_queue_page()
         self._refresh_visible_list()
         self._refresh_detail_action_button()
+
+        # Refresh updates after queue completes
+        if had_items and done_count:
+            self._load_async(force=True)
+
         return False
 
     def _on_close_request(self, *_args):

@@ -75,6 +75,31 @@ Example:
 }
 ```
 
+## Polkit Integration
+
+DNF App Center uses polkit (pkexec) for privilege escalation when installing, removing, or updating packages.
+
+### Nobara Integration
+
+For Nobara Linux systems, a polkit rule is included to allow `nobara-sync` and `nobara-updater` to run without additional authentication when called from the already-authenticated privileged helper. This prevents double password prompts when using the "Select All and Update" feature.
+
+The polkit rule is automatically installed to:
+```text
+/usr/share/polkit-1/rules.d/50-dnf-app-center-nobara-sync.rules
+```
+
+### Manual Installation (Development)
+
+If you're running from source and want to test the polkit rule:
+
+```bash
+sudo cp polkit/50-dnf-app-center-nobara-sync.rules /etc/polkit-1/rules.d/
+```
+
+### Authentication Caching
+
+The app includes a "Remember auth" checkbox in the top bar that caches your authentication for the session. When enabled, you only need to enter your password once per session rather than for each package operation.
+
 ## Building locally
 
 Install typical Fedora build dependencies:

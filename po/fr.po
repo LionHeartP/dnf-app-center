@@ -184,8 +184,8 @@ msgstr "Mettre à jour"
 msgid "Update Selected"
 msgstr "Mettre à jour la sélection"
 
-msgid "Update System"
-msgstr "Mettre à jour le système"
+msgid "Select All and Update"
+msgstr "Tout sélectionner et mettre à jour"
 
 msgid "Update checker"
 msgstr "Vérificateur de mises à jour"

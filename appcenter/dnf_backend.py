@@ -360,6 +360,10 @@ class DnfBackend:
                 self._ingest_pkg_into_cache(cache, installed_pkg, installed=True)
 
         items = list(cache.values())
+        # Filter out packages where installed version matches candidate version exactly
+        # This prevents showing "updates" for packages installed from @commandline or other repos
+        # when the same version is available in a different repo
+        items = [app for app in items if app.installed_version != app.candidate_version]
         items.sort(key=lambda app: app.name.casefold())
         return items
 

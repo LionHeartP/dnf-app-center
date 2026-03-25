@@ -184,8 +184,8 @@ msgstr "Обновить"
 msgid "Update Selected"
 msgstr "Обновить выбранное"
 
-msgid "Update System"
-msgstr "Обновить систему"
+msgid "Select All and Update"
+msgstr "Выбрать всё и обновить"
 
 msgid "Update checker"
 msgstr "Проверка обновлений"

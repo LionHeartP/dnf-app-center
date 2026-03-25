@@ -184,8 +184,8 @@ msgstr "업데이트"
 msgid "Update Selected"
 msgstr "선택 항목 업데이트"
 
-msgid "Update System"
-msgstr "시스템 업데이트"
+msgid "Select All and Update"
+msgstr "모두 선택 및 업데이트"
 
 msgid "Update checker"
 msgstr "업데이트 검사기"
